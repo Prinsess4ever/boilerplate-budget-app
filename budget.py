@@ -1,64 +1,49 @@
 
 class Category:
-    def __init__(self, food):
-        self.aan_wat_je_geeft = food
+    def __init__(self, name):
+        self.name = name
         self.ledger = []
         self.money = 0
-        self.lijst = []
-        self.fiets = ""
 
     def deposit(self, money, msg=None):
         self.money += money
-        if msg is not None:
-            self.ledger.append({'description': msg, 'amount': money})
-        else:
-            self.ledger.append({'description': '', 'amount': money})
+        self.ledger.append({'description': msg or '', 'amount': money})
+        return True
 
-    def withdraw(self, money, msg):
+    def withdraw(self, money, msg=None):
+        if not self.check_funds(money):
+            return False
+
         self.money -= money
-        self.ledger.append({'description': msg, 'amount': money})
+        self.ledger.append({'description': msg or '', 'amount': -money})
+        return True
+
+    def check_funds(self, money):
+        return money <= self.money
 
     def transfer(self, money, other_category):
-        self.ledger.append({'description': "Transfer to " + other_category.aan_wat_je_geeft, 'amount': -money})
-        other_category.ledger.append({'description': "Transfer from " + self.aan_wat_je_geeft, 'amount': money})
-        self.money -= money
-        other_category.money += money
-        return True
+        return (
+            self.withdraw(money, "Transfer to " + other_category.name)
+            and other_category.deposit(money, "Transfer from " + self.name)
+        )
+
     def get_balance(self):
-        # *************Food*************
-        # initial deposit        1000.00
-        # groceries               -10.15
-        # restaurant and more foo -15.89
-        # Transfer to Clothing    -50.00
-        # Total: 923.96
-        food = self.aan_wat_je_geeft
-        x = food.center(30, '*')
-        resultaat = x + '\n'
-        aantal = 0
-        ok = ""
-        for lijn in self.ledger:
-            iets_nemen = self.ledger[aantal]
-
-            description = iets_nemen["description"]
-            amount = iets_nemen["amount"]
-
-            if aantal != 0:
-                ok = "Total: " + str(self.money)
-
-            if len(description) > 30:
-                description = description[:23]
-            if aantal > 0:
-                resultaat1 = f"{description:<23}{-amount:>7.2f}"
-            else:
-                resultaat1 = f"{description:<23}{amount:>7.2f}"
-            resultaat += resultaat1 + '\n'
-            aantal += 1
-        a =1
         return self.money
 
+    def __str__(self):
+        resultaat = self.name.center(30, '*') + '\n'
 
+        for lijn in self.ledger:
+            description = lijn["description"]
+            amount = lijn["amount"]
 
+            if len(description) > 23:
+                description = description[:23]
 
+            resultaat += f"{description:<23}{amount:>7.2f}\n"
+
+        resultaat += "Total: " + str(self.money)
+        return resultaat
 
 
 def create_spend_chart(categories):
