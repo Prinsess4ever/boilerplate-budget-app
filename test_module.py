@@ -58,8 +58,8 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(good_transfer, True, 'Expected `transfer` method to return `True`.')
         self.assertEqual(food_balance_before - food_balance_after, transfer_amount, 'Expected `transfer` method to reduce balance in food object.')
         self.assertEqual(entertainment_balance_after - entertainment_balance_before, transfer_amount, 'Expected `transfer` method to increase balance in entertainment object.')
-        actual = self.entertainment.ledger[0]
-        expected = {"amount": transfer_amount, "description": "Transfer from Food"}
+        expected = self.entertainment.ledger[0]
+        actual = {"amount": transfer_amount, "description": "Transfer from Food"}
         self.assertEqual(actual, expected, 'Expected `transfer` method to create a specific ledger item in entertainment object.')
 
     def test_check_funds(self):
