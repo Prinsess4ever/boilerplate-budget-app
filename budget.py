@@ -47,4 +47,60 @@ class Category:
 
 
 def create_spend_chart(categories):
-    pass
+    alle_totalen = []
+    for category in categories:
+        totaal = 0
+        for ledger_entry in category.ledger:
+            if ledger_entry['amount'] < 0:
+                totaal += ledger_entry['amount']
+        alle_totalen.append(totaal)
+
+    totaal = sum(alle_totalen)
+    perc1 = [100 * (cat1 / totaal) for cat1 in alle_totalen]
+    lijst = []
+    for i in perc1:
+        if i % 10 != 0:
+            aantal = i % 10
+            LGG = 10 - aantal
+            if i == aantal:
+                i = 0.0
+            elif aantal > 5:
+                i += LGG
+            elif aantal == 5:
+                i += 5
+            else:
+                i -= aantal
+        lijst.append(i)
+
+    lengtes = []
+    resultaat = "Percentage spent by category" + '\n'
+    for aantal in range(100, -1, -10):
+        result = f"{str(aantal):>3}|"
+        for percent in lijst:
+            if aantal <= percent:
+                result += " o "
+            else:
+                result += "   "
+
+
+        resultaat += result + ' \n'
+
+    resultaat += "    ----------" + '\n'
+    names = [category.name for category in categories]
+    lengthe = len(names[0])
+    lenthe = len(names[1])
+    lentgte = len(names[2])
+    lengtes.append(lenthe)
+    lengtes.append(lengthe)
+    lengtes.append(lentgte)
+    for i in range(len(lengtes)):
+        names[i] += '    ' * max(lengtes)
+
+    for getal in range(max(lengtes)):
+        resultaat += "     " + names[0][getal] + "  " + names[1][getal] + "  " + names[2][getal] +  "  " + '\n'
+        getal += 1
+
+    return resultaat[:-2] + ' '
+
+
+

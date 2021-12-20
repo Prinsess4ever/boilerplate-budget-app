@@ -16,10 +16,9 @@ food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restaurant and more food for dessert")
 
 clothing = budget.Category("Kleren")
-food.transfer(50, clothing)
 food.transfer(25.55, clothing)
-#clothing.withdraw(25.55)
-#clothing.withdraw(100)
+clothing.withdraw(25.55)
+clothing.withdraw(100)
 print(food.get_balance())
 
 print('''
